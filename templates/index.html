@@ -6,27 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>高潛力人才分析平台</title>
 
-    <!-- Bootstrap CSS（先載入樣式） -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- DataTables CSS -->
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
 
-    <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
 
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
-    <!-- 自訂 CSS（最後覆蓋） -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 
-    <!-- Bootstrap JS（已包含 Popper，不能再額外載入 Popper） -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
-    <!-- 側邊欄 -->
     <div class="sidebar">
         <nav>
             <a href="/" class="sidebar-icon active" data-bs-toggle="tooltip" data-bs-placement="right" title="回到首頁">
@@ -41,7 +34,6 @@
         </nav>
     </div>
 
-    <!-- Blob 背景 -->
     <div class="blob-container">
         <div class="blob blob1"></div>
         <div class="blob blob2"></div>
@@ -50,7 +42,6 @@
         <div class="blob blob5"></div>
     </div>
 
-    <!-- 主內容區 -->
     <div class="main-content">
         <div class="main-card">
             <h1>高潛力人才分析平台</h1>
@@ -84,7 +75,7 @@
                                 <th>履歷</th>
                                 <th>總分</th>
                                 <th>高潛力</th>
-                                <th>詳情</th>
+                                <th>操作</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -105,8 +96,9 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    <button class="detail-btn" data-bs-toggle="modal" data-bs-target="#detailModal"
-                                        data-desc="{{ r['Resume_Text'] }}">詳情</button>
+                                    <button class="detail-btn" data-name="{{ r['Name'] }}">
+                                        詳情
+                                    </button>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -118,60 +110,28 @@
         </div>
     </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">履歷詳情</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title" id="detailModalLabel">履歷分析詳情</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <pre id="modal-text" style="white-space: pre-wrap;"></pre>
+                    <pre id="modal-text"
+                        style="white-space: pre-wrap; word-wrap: break-word; font-family: 'Noto Sans TC', sans-serif; background: #f8f9fa; padding: 15px; border-radius: 5px; min-height: 200px;"></pre>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- jQuery & DataTables -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
     <script src="{{ url_for('static', filename='js/blob.js') }}"></script>
     <script src="{{ url_for('static', filename='js/table.js') }}"></script>
-
-    <script>
-        $(document).ready(function () {
-            $('#resultTable').DataTable();
-        });
-
-        const detailModal = document.getElementById('detailModal');
-        detailModal.addEventListener('show.bs.modal', event => {
-            const button = event.relatedTarget;
-            const desc = button.getAttribute('data-desc');
-            detailModal.querySelector('#modal-text').textContent = desc;
-        });
-
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.map(function (el) {
-            return new bootstrap.Tooltip(el, { offset: [0, 20] });
-        });
-    </script>
-
-    <script>
-        document.addEventListener('hidden.bs.modal', function (event) {
-            const backdrops = document.querySelectorAll('.modal-backdrop');
-            backdrops.forEach(bd => bd.remove());
-        });
-    </script>
-
-    <script>
-        document.addEventListener('hidden.bs.modal', function () {
-            document.body.classList.remove('modal-open');
-            document.body.style.overflow = 'auto';
-            document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
-        });
-    </script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
 </body>
 

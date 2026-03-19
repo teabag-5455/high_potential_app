@@ -1,22 +1,41 @@
 $(document).ready(function () {
-    // 初始化 DataTable
-    const table = $('#resultTable').DataTable({
-        "order": [[4, "desc"]],
-        "language": { "search": "搜尋姓名：", "paginate": { "next": "後一頁", "previous": "前一頁" } }
+    // 1. 初始化 DataTable
+    if (!$.fn.DataTable.isDataTable("#resultTable")) {
+        $("#resultTable").DataTable({ 
+            pageLength: 10, 
+            lengthChange: false, 
+            info: false 
+        });
+    }
+
+    // 2. 詳情按鈕點擊事件
+    $(document).off("click", ".detail-btn").on("click", ".detail-btn", function (e) {
+        e.preventDefault();
+        const name = $(this).attr("data-name");
+        const modalElement = document.getElementById("detailModal");
+        
+        // 取得實例並顯示
+        const detailModal = bootstrap.Modal.getOrCreateInstance(modalElement);
+        $("#modal-text").text("載入中...");
+        detailModal.show();
+
+        fetch("/get_resume_detail", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: name })
+        })
+        .then(res => res.json())
+        .then(data => {
+            $("#modal-text").text(data.success ? data.text : "讀取失敗: " + data.text);
+        })
+        .catch(() => $("#modal-text").text("連線伺服器失敗"));
     });
 
-    // 事件委託：處理點擊詳情
-    $(document).on('click', '.detail-btn', function () {
-        const id = $(this).attr('data-id');
-        // 從對應的隱藏 div 抓取內容
-        const text = $('#raw-text-' + id).text();
-        
-        console.log("正在顯示 ID:", id, "內容長度:", text.length);
-
-        // 填入 Modal 並顯示
-        $('#modal-content-area').text(text || "（此候選人無詳細履歷內容）");
-        
-        const myModal = new bootstrap.Modal(document.getElementById('detailModal'));
-        myModal.show();
+    // 3. 【關鍵修正】當 Modal 隱藏時，強制清理所有遮罩與 Body 鎖定狀態
+    $("#detailModal").on("hidden.bs.modal", function () {
+        // 移除所有殘留的黑影遮罩
+        $(".modal-backdrop").remove();
+        // 恢復 Body 的滾動能力，防止頁面卡死無法移動
+        $("body").removeClass("modal-open").css("overflow", "auto").css("padding-right", "0");
     });
 });
