@@ -5,6 +5,7 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from .talent_vector import all_skills
+from datetime import datetime
 
 stop_words = set(stopwords.words('english'))
 lemmatizer = WordNetLemmatizer()
@@ -28,7 +29,15 @@ def extract_years_experience(text):
     matches = re.findall(r'(\d+)\s+(?:years|yrs)\s+(?:of\s+)?experience', text, flags=re.I)
     if matches:
         return int(matches[0])
-    return 0
+    #新增:嘗試抓正確年份，因覆蓋問題還未測試
+    year_range = re.findall(r'(19\d{2})\s*-\s*(20\d{2}|Present|Current)', text, flags=re.I)
+    total_years = 0
+    for start, end in year_range:
+        start_year = int(start)
+        end_year = datetime.now().year if any(x in end.lower() for x in ['present', 'current']) else int(end)
+        total_years += (end_year - start_year)
+    return total_years if total_years > 0 else 0
+
 
 def extract_education_level(text):
     """從文字抓教育程度"""
@@ -42,6 +51,7 @@ def extract_education_level(text):
     else:
         return 'Bachelor'  # 預設值
 
+# 主要功能:建立候選人資料
 def create_candidate_profile(row):
     """
     將 CSV row 或單檔案字典轉為統一候選人資料 dict
