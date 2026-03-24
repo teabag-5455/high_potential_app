@@ -15,7 +15,7 @@ def generate_talent_vector(profile: dict) -> dict:
     # --- 1. 基礎資訊傳遞 (關鍵修正點) ---
     # 必須將 Raw_Text 放入回傳的字典中，API 才能讀取到原始內容
     vector['Name'] = profile.get('Name', 'Unknown')
-    vector['Raw_Text'] = profile.get('Raw_Text', '') 
+    vector['Raw_Text'] = profile.get('Raw_Text', '')
     
     # --- 2. 技能評分 (Skills Score) ---
     skills_list = profile.get('Skills_List', [])

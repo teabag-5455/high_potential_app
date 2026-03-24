@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>技能分析與排行榜 - 高潛力人才分析平台</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="sidebar">
+        <nav>
+            <a href="/" class="sidebar-icon" data-bs-toggle="tooltip" data-bs-placement="right" title="回到首頁">
+                <i class="fas fa-home"></i>
+            </a>
+            <a href="#" class="sidebar-icon" data-bs-toggle="tooltip" data-bs-placement="right" title="系統設定">
+                <i class="fas fa-cog"></i>
+            </a>
+            <a href="/analytics" class="sidebar-icon active" data-bs-toggle="tooltip" data-bs-placement="right" title="技能分析">
+                <i class="fas fa-chart-line"></i>
+            </a>
+        </nav>
+    </div>
+
+    <div class="blob-container">
+        <div class="blob blob1"></div>
+        <div class="blob blob2"></div>
+        <div class="blob blob3"></div>
+        <div class="blob blob4"></div>
+        <div class="blob blob5"></div>
+    </div>
+
+    <div class="main-content">
+        <div class="main-card">
+            <h2 class="text-center mb-4"><i class="fas fa-trophy text-warning"></i> 候選人潛力總分排行榜</h2>
+            
+            {% if candidates %}
+            <div style="position: relative; height:60vh; width:100%">
+                <canvas id="leaderboardChart"></canvas>
+            </div>
+            {% else %}
+            <div class="alert alert-info text-center mt-5" role="alert">
+                目前系統中尚無履歷紀錄，請先至首頁上傳履歷！
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/blob.js') }}"></script>
+
+    {% if candidates %}
+    <script>
+        //從後端接收已排序的資料
+        const candidatesData = {{ candidates | tojson }};
+        
+        //提取標籤(姓名)與資料(總分)
+        const labels = candidatesData.map(c => c.Name);
+        const scores = candidatesData.map(c => c.Total_Score);
+        
+        //根據是否為高潛力給予不同的長條圖顏色
+        const backgroundColors = candidatesData.map(c => 
+            c.High_Potential ? 'rgba(76, 189, 124, 0.8)' : 'rgba(95, 156, 255, 0.6)'
+        );
+        const borderColors = candidatesData.map(c => 
+            c.High_Potential ? 'rgba(76, 189, 124, 1)' : 'rgba(95, 156, 255, 1)'
+        );
+
+        const ctx = document.getElementById('leaderboardChart').getContext('2d');
+        const leaderboardChart = new Chart(ctx, {
+            type: 'bar', //使用長條圖
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '潛力總分',
+                    data: scores,
+                    backgroundColor: backgroundColors,
+                    borderColor: borderColors,
+                    borderWidth: 1,
+                    borderRadius: 6 //圓角設計，更有科技感
+                }]
+            },
+            options: {
+                indexAxis: 'x', //設定為橫向長條圖(排行榜常用)
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false //隱藏圖例
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return ' 總分: ' + context.parsed.x + ' 分';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                        ticks: { color: '#e8f1ff' }
+                    },
+                    y: {
+                        grid: { display: false },
+                        ticks: { 
+                            color: '#e8f1ff',
+                            font: { size: 14, weight: 'bold' }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+    {% endif %}
+</body>
+</html>

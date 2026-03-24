@@ -41,11 +41,17 @@ def get_resume_detail():
         return jsonify({"success": False, "text": "無暫存資料"})
 
     for r in LAST_RESULTS:
-        # 關鍵：這裡必須回傳 Raw_Text 給前端顯示
+        # 關鍵：這裡必須回傳Raw_Text給前端顯示
         if r.get("Name") == name:
             return jsonify({"success": True, "text": r.get("Raw_Text", "無內容")})
 
     return jsonify({"success": False, "text": "查無此人"})
+
+@app.route("/analytics")
+def analytics():
+    # 將系統中的候選人依照總分由高到低排序
+    sorted_candidates = sorted(LAST_RESULTS, key=lambda x: x.get('Total_Score', 0), reverse=True)
+    return render_template("analytics.html", candidates=sorted_candidates)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5050)
