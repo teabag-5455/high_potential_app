@@ -10,7 +10,8 @@ from nltk.tree import Tree
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
-from .talent_vector import all_skills
+from .config_manager import load_config
+
 
 def init_nltk():
     required_resources = [
@@ -111,6 +112,7 @@ def create_candidate_profile(row_data, is_csv=True):
     #建立名字，優先取用csv欄位。否則智慧抓取
     base_name = row_data.get('Name') if is_csv else row_data.get('Name', 'Unknown')
     final_name = base_name if is_csv and base_name else extract_name_smart(raw_text, base_name)
+    config = load_config()
 
     years = row_data.get('Years_Experience')
     if is_csv:
@@ -120,12 +122,14 @@ def create_candidate_profile(row_data, is_csv=True):
             final_years = int(float(years))
     else:
         final_years = extract_years_experience(raw_text)
+
+    skills = config['sub_items']['Skills']
     
     profile = {
         'Name': final_name,
         'Resume_Text': clean_text(raw_text),
         'Raw_Text': raw_text,
-        'Skills_List': [s for s in all_skills if s in raw_text.lower()],
+        'Skills_List': [s for s in skills if s in raw_text.lower()],
         'Years_Experience': final_years,
         'Education_Level': row_data.get('Education_Level') if is_csv and pd.notna(row_data.get('Education_Level')) else extract_education_level(raw_text),
         'Job_Role': row_data.get('Job_Role', ''),

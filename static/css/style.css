@@ -466,3 +466,52 @@ table {
     margin-left: 10px;
     width: 200px;
 }
+
+/* =====================================
+   設定頁面樣式
+===================================== */
+.setting-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+.modern-input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border-radius: 8px;
+}
+.modern-input:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #7fb3ff;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(120, 180, 255, 0.4);
+}
+.sub-item-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+.btn-remove {
+    background: rgba(220, 53, 69, 0.2);
+    color: #ff6b6b;
+    border: 1px solid rgba(220, 53, 69, 0.4);
+    border-radius: 8px;
+    transition: 0.2s;
+}
+.btn-remove:hover {
+    background: rgba(220, 53, 69, 0.6);
+    color: white;
+}
+.nav-pills .nav-link {
+    color: black;
+    font-weight: 900;
+    font-size: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    margin-right: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
