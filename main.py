@@ -47,11 +47,5 @@ def get_resume_detail():
 
     return jsonify({"success": False, "text": "查無此人"})
 
-@app.route("/analytics")
-def analytics():
-    # 將系統中的候選人依照總分由高到低排序
-    sorted_candidates = sorted(LAST_RESULTS, key=lambda x: x.get('Total_Score', 0), reverse=True)
-    return render_template("analytics.html", candidates=sorted_candidates)
-
 if __name__ == "__main__":
     app.run(debug=True, port=5050)

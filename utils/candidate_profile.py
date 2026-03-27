@@ -34,7 +34,8 @@ lemmatizer = WordNetLemmatizer()
 
 def extract_name_smart(raw_text, file_path=None):
     # NER與位置判斷抓取名字
-    BLACK_LIST = {'name', 'resume', 'cv', 'curriculum', 'page', 'profile', 'contact', 'email', 'phone'}#過濾黑名單
+    BLACK_LIST = {'name', 'resume', 'cv', 'curriculum', 'page', 'profile', 'contact', 'email', 'phone', 'software',
+                  'engineer', 'manager', 'developer', 'html', 'css'}#過濾黑名單
     # raw_text為空，回傳檔名。檔名為空回傳Unknown
     if not raw_text or len(raw_text.strip()) == 0:
         return os.path.basename(file_path) if file_path else "Unknown"
@@ -49,10 +50,10 @@ def extract_name_smart(raw_text, file_path=None):
         for chunk in chunks:
             if isinstance(chunk, Tree) and chunk.label() == 'PERSON':
                 name = " ".join([leaf[0] for leaf in chunk.leaves()])
-                # 過濾:名字通常由2-3組單字組成
+                # 過濾:名字只取1-2組單字組成
                 cuts = name.split() #切片
                 filter = [n for n in cuts if n.lower() not in BLACK_LIST and n.isalpha()] #過濾黑名單與非字母
-                if 2 <= len(filter) < 4:
+                if 1 <= len(filter) < 3:
                     return " ".join(filter) #回傳過濾後的名字
     except Exception as e:
         print(f"NER Error: {e}")
@@ -61,7 +62,7 @@ def extract_name_smart(raw_text, file_path=None):
     lines = [l.strip() for l in raw_text.split('\n') if l.strip()]
     for line in lines[:3]:
         # 如果這行字數適中，且不在黑名單中，猜測是名字
-        if 2 <= len(line.split()) < 4 and not any(b in line.lower() for b in BLACK_LIST) and line.isalpha():
+        if 1 <= len(line.split()) < 3 and not any(b in line.lower() for b in BLACK_LIST) and line.isalpha():
             return line
 
     return os.path.basename(file_path).split('.')[0] if file_path else "Unknown" #毫無結果，直接去除副檔名作名字

@@ -28,7 +28,7 @@
             <a href="#" class="sidebar-icon" data-bs-toggle="tooltip" data-bs-placement="right" title="系統設定">
                 <i class="fas fa-cog"></i>
             </a>
-            <a href="/analytics" class="sidebar-icon" data-bs-toggle="tooltip" data-bs-placement="right" title="技能分析">
+            <a href="#" class="sidebar-icon" data-bs-toggle="tooltip" data-bs-placement="right" title="技能分析">
                 <i class="fas fa-chart-line"></i>
             </a>
         </nav>
@@ -63,6 +63,29 @@
                     <small class="text-muted">* 點擊表頭欄位名稱可切換排序</small>
                 </div>
 
+                <div class="filter-section mb-4 p-4 rounded" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="text-light mb-3"><i class="fas fa-filter"></i> 專業技能過濾 </h5>
+                        <div id="customSearchContainer"></div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <select id="majorCategory" class="form-select modern-select">
+                                <option value="">-- 請選擇大分類 --</option>
+                                <option value="programming"> 程式設計(Programming) </option>
+                                <option value="business"> 商業管理(Business) </option>
+                                <option value="design"> 美術設計(Design) </option>
+                                <option value="New"> 新分類(Testing) </option>
+                            </select>
+                        </div>
+                        <div class="col-md-9">
+                            <div id="subCategoryContainer" class="d-flex flex-wrap gap-2">
+                                <span class="text-muted mt-1" id="subCategoryHint"> 請先選擇大分類... </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="table-responsive">
                     <table id="resultTable" class="table table-hover align-middle modern-table">
                         <thead class="table-light">
@@ -76,6 +99,7 @@
                                 <th>總分</th>
                                 <th>高潛力</th>
                                 <th>操作</th>
+                                <th style="display:none;">隱藏全文</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -100,6 +124,7 @@
                                         詳情
                                     </button>
                                 </td>
+                                <td style="display:none;">{{ r.get('Raw_Text', '') | lower }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
