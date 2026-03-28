@@ -39,8 +39,13 @@ def generate_talent_vector(profile: dict) -> dict:
     vector['Education_Score'] = sub_items['Education'].get(edu_level, 1)
     
     # --- 5. 職位加分 (Job Role Score) ---
-    job_role = profile.get('Job_Role', '').lower()
-    vector['JobRole_Score'] = sum([val for role, val in sub_items['JobRole'].items() if role in job_role])
+    job_role = profile.get('Job_Role', '').lower() # 固定格式職位名稱比對
+    raw_text = profile.get('Raw_Text', '')[:500].lower() # 前500字關鍵比對
+    job_score = 0
+    for target_role, weight in sub_items['JobRole'].items():
+        if target_role in job_role or target_role in raw_text:
+            job_score += weight
+    vector['JobRole_Score'] = job_score
     
     # --- 6. 履歷關鍵字加分 (Resume Score) ---
     # 針對 Resume_Text (已清理過的文字) 進行關鍵字掃描

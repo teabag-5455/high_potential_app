@@ -73,7 +73,7 @@ def extract_years_experience(text):
     matches = re.findall(r'(\d+)\s+(?:years|yrs)\s+(?:of\s+)?experience', text, flags=re.I)
     direct_years = int(matches[0]) if matches else 0
 
-    '''格式 20xx-20xx 或 20xx - Present'''
+    '''格式 19/20xx-20xx/Present'''
     year_range = re.findall(r'(20\d{2}|19\d{2})\s*[-–]\s*(20\d{2}|Present|Current|Now)', text, flags=re.I)
     total_years = 0
     for start, end in year_range:
@@ -109,11 +109,11 @@ def create_candidate_profile(row_data, is_csv=True):
     將 CSV row 或單檔案字典轉為統一候選人資料 dict
     """
     raw_text = str(row_data.get('Resume_Text') or row_data.get('Resume') or "")
+    config = load_config()
     #建立名字，優先取用csv欄位。否則智慧抓取
     base_name = row_data.get('Name') if is_csv else row_data.get('Name', 'Unknown')
     final_name = base_name if is_csv and base_name else extract_name_smart(raw_text, base_name)
-    config = load_config()
-
+    
     years = row_data.get('Years_Experience')
     if is_csv:
         if pd.isna(years) or years is None or str(years).strip() == '' or float(years) == 0:

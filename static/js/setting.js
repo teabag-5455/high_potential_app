@@ -32,9 +32,9 @@ $(document).ready(function () {
             sub_items: {
                 Skills: {},
                 Keywords: {},
+                JobRole: {},
                 // 暫時保留預設值，如果未來UI開放編輯可以再改成動態抓取
-                Education: { "phd": 3, "master": 2, "bachelor": 1 }, 
-                JobRole: { "data scientist": 1, "ml engineer": 1, "ai researcher": 1 }
+                Education: { "phd": 3, "master": 2, "bachelor": 1 }
             },
             threshold: parseFloat($('#thresholdInput').val()) || 15
         };

@@ -88,6 +88,9 @@
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-keywords">履歷關鍵字(Keywords)</button>
                             </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-jobrole">職位(JobRole)</button>
+                            </li>
                         </ul>
 
                         <div class="tab-content mt-4" id="pills-tabContent">
@@ -115,6 +118,19 @@
                                     {% endfor %}
                                 </div>
                                 <button class="btn btn-outline-light mt-2 btn-add-sub" data-target="Keywords"><i class="fas fa-plus"></i> 新增關鍵字</button>
+                            </div>
+
+                            <div class="tab-pane fade" id="pills-jobrole">
+                                <div id="JobRole-container" class="sub-items-container" data-category="JobRole">
+                                    {% for key, val in config.sub_items.JobRole.items() %}
+                                    <div class="sub-item-row">
+                                        <input type="text" class="form-control modern-input item-key" value="{{ key }}" placeholder="例如: software engineer">
+                                        <input type="number" step="1" class="form-control modern-input item-val" value="{{ val }}" style="width: 100px;" placeholder="分數">
+                                        <button class="btn btn-remove"><i class="fas fa-times"></i></button>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <button class="btn btn-outline-light mt-2 btn-add-sub" data-target="JobRole"><i class="fas fa-plus"></i> 新增職位</button>
                             </div>
                         </div>
 

@@ -14,8 +14,14 @@ Bug&Update
     parser only doing extract file.
     candidate_profile is only making resume package.
 3.新增分類功能，新分類可於main.js添加
-    problem:由分類中引出分數比重?
     可自訂分類，並保留自定義分類?
+4.新增自定義分數比重
+    可由前端功能進行自定義權重類別、分數
+    由settings.json讀取，設定在config_manager
+5.修正職位閱讀問題
+    建立動態職位相關性權重
+    修正talent_vector職位閱讀，不僅以固定格式搜索，前500字判定
+    q:大量文字的履歷該如何有效益的讀取?
     
 
 incorrect startxref pointer(1)，PDF讀取錯誤。可嘗試新套件?
