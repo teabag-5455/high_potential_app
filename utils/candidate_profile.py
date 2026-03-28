@@ -88,12 +88,22 @@ def extract_years_experience(text):
 def extract_education_level(text):
     """從文字抓教育程度"""
     text_lower = text.lower()
-    if any(x in text_lower for x in ['phd', 'doctor']):
-        return 'PhD'
-    elif any(x in text_lower for x in ['master', 'msc', 'ma']):
-        return 'Master'
-    else:
-        return 'Bachelor'  # 預設值
+    if re.search(r'\b(ph\.?d\.?|doctorate|doctor)\b', text_lower):
+        return 'phd'# 多樣式的學位名稱判定
+    
+    if re.search(r'\b(master|masters|m\.?sc\.?|m\.?b\.?a\.?)\b', text_lower):
+        return 'master'
+    if re.search(r'\b(ms|ma|m\.s\.|m\.a\.)\b', text_lower):
+        if re.search(r'\b(university|college|degree|graduated)\b', text_lower):
+            return 'master'# 多層判定:確保已有學位才確認在攻讀master
+
+    if re.search(r'\b(bachelor|bachelors|b\.?sc\.?|b\.?b\.?a\.?)\b', text_lower):
+        return 'bachelor'
+    if re.search(r'\b(bs|ba|b\.s\.|b\.a\.)\b', text_lower):
+        if re.search(r'\b(university|college|degree|graduated)\b', text_lower):
+            return 'bachelor'
+            
+    return 'bachelor'
 
 def clean_text(text):
     """文字清理 + NLTK 處理"""
